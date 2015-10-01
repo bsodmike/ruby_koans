@@ -23,8 +23,17 @@ class AboutHashes < Neo::Koan
   def test_accessing_hashes_with_fetch
     hash = { :one => "uno" }
     assert_equal "uno", hash.fetch(:one)
-    assert_raise(KeyError) do
-      hash.fetch(:doesnt_exist)
+
+    in_ruby_version("1.8.7") do
+      assert_raise(IndexError) do
+        hash.fetch(:doesnt_exist)
+      end
+    end
+
+    in_ruby_version("2") do
+      assert_raise(KeyError) do
+        hash.fetch(:doesnt_exist)
+      end
     end
 
     # THINK ABOUT IT:
