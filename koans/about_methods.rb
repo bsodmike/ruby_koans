@@ -41,23 +41,25 @@ class AboutMethods < Neo::Koan
     exception = assert_raise(ArgumentError) do
       my_global_method
     end
-    assert_match(/__/, exception.message)
+    assert_match(/wrong number/, exception.message)
 
-    exception = assert_raise(___) do
+    exception = assert_raise(ArgumentError) do
       my_global_method(1,2,3)
     end
-    assert_match(/__/, exception.message)
+    assert_match(/wrong number/, exception.message)
   end
 
   # ------------------------------------------------------------------
 
-  def method_with_defaults(a, b=:default_value)
+  # Is it preferrable to write `b='foo'` or `b = 'foo'`
+  # Going with the latter as it's easier on the eyes, correcting below
+  def method_with_defaults(a, b = :default_value)
     [a, b]
   end
 
   def test_calling_with_default_values
-    assert_equal [1, __], method_with_defaults(1)
-    assert_equal [1, __], method_with_defaults(1, 2)
+    assert_equal [1, :default_value], method_with_defaults(1)
+    assert_equal [1, 2], method_with_defaults(1, 2)
   end
 
   # ------------------------------------------------------------------
@@ -67,10 +69,10 @@ class AboutMethods < Neo::Koan
   end
 
   def test_calling_with_variable_arguments
-    assert_equal __, method_with_var_args.class
-    assert_equal __, method_with_var_args
-    assert_equal __, method_with_var_args(:one)
-    assert_equal __, method_with_var_args(:one, :two)
+    assert_equal Array, method_with_var_args.class
+    assert_equal [], method_with_var_args
+    assert_equal [:one], method_with_var_args(:one)
+    assert_equal [:one, :two], method_with_var_args(:one, :two)
   end
 
   # ------------------------------------------------------------------
@@ -82,7 +84,7 @@ class AboutMethods < Neo::Koan
   end
 
   def test_method_with_explicit_return
-    assert_equal __, method_with_explicit_return
+    assert_equal :return_value, method_with_explicit_return
   end
 
   # ------------------------------------------------------------------
@@ -93,7 +95,7 @@ class AboutMethods < Neo::Koan
   end
 
   def test_method_without_explicit_return
-    assert_equal __, method_without_explicit_return
+    assert_equal :return_value, method_without_explicit_return
   end
 
   # ------------------------------------------------------------------
@@ -103,11 +105,11 @@ class AboutMethods < Neo::Koan
   end
 
   def test_calling_methods_in_same_class
-    assert_equal __, my_method_in_the_same_class(3,4)
+    assert_equal 12, my_method_in_the_same_class(3,4)
   end
 
   def test_calling_methods_in_same_class_with_explicit_receiver
-    assert_equal __, self.my_method_in_the_same_class(3,4)
+    assert_equal 12, self.my_method_in_the_same_class(3,4)
   end
 
   # ------------------------------------------------------------------
@@ -118,14 +120,47 @@ class AboutMethods < Neo::Koan
   private :my_private_method
 
   def test_calling_private_methods_without_receiver
-    assert_equal __, my_private_method
+    assert_equal "a secret", my_private_method
+  end
+
+  class President
+    def initialize(name, location)
+      @name = name
+      @location = location
+    end
+
+    attr_reader :name, :location
   end
 
   def test_calling_private_methods_with_an_explicit_receiver
-    exception = assert_raise(___) do
+    exception = assert_raise(NoMethodError) do
       self.my_private_method
     end
-    assert_match /__/, exception.message
+    assert_match /private method/, exception.message
+
+    # However, you can use `#send` or `#__send__` if `#send` has been overriden
+    assert_equal "a secret", self.send(:my_private_method)
+    assert_equal "a secret", self.__send__(:my_private_method)
+
+    my_icbm = Class.new do
+      def initialize(authority)
+        @authority = authority
+      end
+
+      def send(target)
+        "hey, I've been overriden! Unable to launch!"
+      end
+
+      private
+      def say_bye_bye_to(target)
+        "Bye bye #{target.name}!"
+      end
+    end
+
+    us_president = President.new('Obama', 'Washington D.C.')
+    russian_president = President.new('Putin', 'Moscow')
+    assert_match /Unable to launch/, my_icbm.new(us_president).send(russian_president)
+    assert_match /Bye bye/, my_icbm.new(us_president).__send__(:say_bye_bye_to, russian_president)
   end
 
   # ------------------------------------------------------------------
