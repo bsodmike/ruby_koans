@@ -142,7 +142,7 @@ class AboutControlStatements < Neo::Koan
     10.times do
       sum += 1
     end
-    assert_equal __, sum
+    assert_equal 10, sum
   end
 
 end
