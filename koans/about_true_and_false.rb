@@ -23,7 +23,7 @@ class AboutTrueAndFalse < Neo::Koan
 
   # NOTE: All objects are _truthy_ in Ruby, that's why it's good practice to go
   # double-bang with predicate methods, so that we return a boolean rather than
-  # an objects truthy-ness.
+  # an object's truthy-ness.
   def test_everything_else_is_treated_as_true
     assert_equal :true_stuff, truth_value(1)
     assert_equal :true_stuff, truth_value(0)
