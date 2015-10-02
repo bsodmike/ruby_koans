@@ -179,13 +179,20 @@ class AboutMethods < Neo::Koan
 
   def test_calling_methods_in_other_objects_require_explicit_receiver
     rover = Dog.new
-    assert_equal __, rover.name
+    assert_equal "Fido", rover.name
   end
 
   def test_calling_private_methods_in_other_objects
     rover = Dog.new
-    assert_raise(___) do
+    assert_raise(NoMethodError) do
       rover.tail
     end
+
+    # NOTE: Following the preceeding example of sending putin a little gift, we can
+    # call `#send` on objects, as a last resort.
+    #
+    # However, we'd be calling methods not part of the public API. Private
+    # methods are private for a reason!
+    assert_equal "tail", rover.send(:tail)
   end
 end
