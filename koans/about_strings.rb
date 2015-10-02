@@ -206,7 +206,7 @@ EOS
     end
 
     in_ruby_version("2") do
-      assert_equal false, a           == b
+      assert_equal true, a           == b
     end
     assert_equal false, a.object_id == b.object_id
   end
