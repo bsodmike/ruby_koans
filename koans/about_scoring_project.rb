@@ -29,9 +29,7 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #
 # Your goal is to write the score method.
 
-def score(dice)
-  # You need to write this method
-end
+require "./scoring_project"
 
 class AboutScoringProject < Neo::Koan
   def test_score_of_an_empty_list_is_zero
