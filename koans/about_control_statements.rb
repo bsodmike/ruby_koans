@@ -134,6 +134,7 @@ class AboutControlStatements < Neo::Koan
     # `#each` in most situations to allow for quick readability.  It's better to
     # be less cryptic where possible.
     assert_equal ["FISH", "AND", "CHIPS"], array.inject([]) { |memo, n| memo << n.upcase }
+    assert_equal ["FISH", "AND", "CHIPS"], array.map(&:upcase) # This is far better though!
   end
 
   def test_times_statement
