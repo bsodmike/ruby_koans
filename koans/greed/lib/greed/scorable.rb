@@ -1,9 +1,15 @@
 module Greed
 
-  module Scorable
-    extend self
+  class Scorable
 
-    def score(dice)
+    def initialize(dice)
+      @dice = dice
+      @non_scoring = []
+    end
+
+    attr_reader :dice
+
+    def score
       tally = 0
 
       counts = Hash.new(0)
@@ -22,8 +28,16 @@ module Greed
         end
       end
 
+      @non_scoring << counts.select { |k, v| v > 0 }.keys
+
       tally
     end
+
+    def non_scoring
+      score if @non_scoring.empty?
+      @non_scoring.flatten
+    end
+
   end
 
 end
