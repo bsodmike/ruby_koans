@@ -15,7 +15,7 @@ class GreedSpec < Neo::Koan
     assert_equal true, Greed.is_a?(Module)
     assert_equal true, Greed::DiceSet.is_a?(Class)
     assert_equal true, Greed::Scorable.is_a?(Class)
-    #assert_equal true, Greed::Game.simulate_turn
+    assert_equal true, Greed::Game.new(:mike, :bob).run
 
   end
 

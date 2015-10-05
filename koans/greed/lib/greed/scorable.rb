@@ -10,6 +10,7 @@ module Greed
     attr_reader :dice
 
     def score
+      @non_scoring = []
       tally = 0
 
       counts = Hash.new(0)
