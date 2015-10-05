@@ -73,7 +73,14 @@ class AboutScope < Neo::Koan
   end
 
   def test_you_can_get_a_list_of_constants_for_any_class_or_module
-    assert_equal [:Dog], Jims.constants
+    in_ruby_version("1.9", "2") do
+      assert_equal [:Dog], Jims.constants
+    end
+
+    in_ruby_version("1.8") do
+      assert_equal ["Dog"], Jims.constants
+    end
+
     assert Object.constants.size > 0
   end
 end
