@@ -39,3 +39,4 @@ in_ruby_version("jruby") do
   require 'about_java_interop'
 end
 require 'about_extra_credit'
+require File.expand_path(File.dirname(__FILE__) + '/greed/spec/greed_spec')
