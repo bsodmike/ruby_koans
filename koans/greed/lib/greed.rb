@@ -24,12 +24,18 @@ module Greed
         dice = DICE_COUNT
 
         while turn_score > 0 do
+          # FIXME: Ask player to approve roll (auto-picking maximum available
+          # dice).
+
           result = turn(turn, dice, player, index)
           if result
             @turns << [index, result]
             turn_score = result[:score]
             turn =+ 1
             dice = result[:remaining_dice]
+
+            # FIXME: Ask player if they wish to proceed with another roll (given
+            # they have remaining dice); if not, break.
           else
             break
           end
