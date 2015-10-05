@@ -17,13 +17,7 @@ class GreedSpec < Neo::Koan
     assert_equal true, Greed::Scorable.is_a?(Class)
   end
 
-  class Player
-    def initialize(name)
-      @name = name
-    end
-
-    attr_reader :name
-  end
+  Player = Greed::Player
 
   def test_running_a_game_records_turns
     game = Greed::Game.new(Player.new("mike"), Player.new("bob"))

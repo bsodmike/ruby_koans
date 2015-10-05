@@ -75,11 +75,15 @@ module Greed
       report << "----\t------\t-----\n"
 
       @turns.each do |turn|
-        report << "#{turn[1][:turn]}\t#{@players[turn[0]]}\t#{turn[1][:score]}\n"
+        report << "#{turn[1][:turn]}\t#{get_player_name(turn[0])}\t#{turn[1][:score]}\n"
       end
       report << "\n"
 
       report
+    end
+
+    def get_player_name(index)
+      @players[index].name
     end
 
   end
