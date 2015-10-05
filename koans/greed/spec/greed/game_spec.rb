@@ -10,4 +10,8 @@ class Greed::GameSpec < Neo::Koan
     assert_equal [:foo, :bar], subject.instance_variable_get("@players")
   end
 
+  def test_game_players_are_readable
+    assert_equal true, Greed::Game.new(:foo).respond_to?(:players)
+  end
+
 end

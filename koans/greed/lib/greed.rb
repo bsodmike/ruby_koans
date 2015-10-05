@@ -35,7 +35,9 @@ module Greed
           end
         end
       end
+    end
 
+    def turn_totals
       show_totals
     end
 
@@ -71,13 +73,17 @@ module Greed
       end
       report << "\n"
 
-      puts report
+      report
     end
 
   end
 
   class Player
+    def initialize(name)
+      @name = name
+    end
 
+    attr_reader :name
   end
 end
 

@@ -15,8 +15,32 @@ class GreedSpec < Neo::Koan
     assert_equal true, Greed.is_a?(Module)
     assert_equal true, Greed::DiceSet.is_a?(Class)
     assert_equal true, Greed::Scorable.is_a?(Class)
-    assert_equal true, Greed::Game.new(:mike, :bob).run
+  end
 
+  class Player
+    def initialize(name)
+      @name = name
+    end
+
+    attr_reader :name
+  end
+
+  def test_running_a_game_records_turns
+    game = Greed::Game.new(Player.new("mike"), Player.new("bob"))
+    game.run
+
+    turns = game.instance_variable_get(:@turns)
+    first_turn = turns[0]
+    first_turn_score = first_turn[1][:score]
+
+    assert first_turn_score > 0
+  end
+
+  def test_running_a_game_and_printing_turn_totals
+    game = Greed::Game.new(Player.new("mike"), Player.new("bob"))
+    game.run
+
+    assert_match /Score/, game.turn_totals
   end
 
 end
