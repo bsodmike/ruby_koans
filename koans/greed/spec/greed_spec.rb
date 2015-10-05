@@ -21,7 +21,7 @@ class GreedSpec < Neo::Koan
 
   def test_running_a_game_records_turns
     game = Greed::Game.new(Player.new("mike"), Player.new("bob"))
-    game.run
+    game.play
 
     turns = game.instance_variable_get(:@turns)
     first_turn = turns[0]
@@ -32,7 +32,7 @@ class GreedSpec < Neo::Koan
 
   def test_running_a_game_and_printing_turn_totals
     game = Greed::Game.new(Player.new("mike"), Player.new("bob"))
-    game.run
+    game.play
 
     assert_match /Score/, game.turn_totals
   end

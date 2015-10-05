@@ -10,16 +10,15 @@ module Greed
     def initialize(*players)
       @players = players
       @turns = []
+      @turn = 0
     end
 
     attr_reader :players
 
-    def run
-
+    def play
       players.each_with_index do |player, index|
         puts "Turn for player #{player}"
 
-        turn = 0
         turn_score = 1
         dice = DICE_COUNT
 
@@ -27,11 +26,10 @@ module Greed
           # FIXME: Ask player to approve roll (auto-picking maximum available
           # dice).
 
-          result = turn(turn, dice, player, index)
+          result = take_turn(@turn, dice, player, index)
           if result
             @turns << [index, result]
             turn_score = result[:score]
-            turn =+ 1
             dice = result[:remaining_dice]
 
             # FIXME: Ask player if they wish to proceed with another roll (given
@@ -41,6 +39,8 @@ module Greed
           end
         end
       end
+
+      @turn += 1
     end
 
     def turn_totals
@@ -48,7 +48,7 @@ module Greed
     end
 
     protected
-    def turn(count, dice, player, index)
+    def take_turn(count, dice, player, index)
       set = DiceSet.new
       set.roll(dice)
 

@@ -18,4 +18,9 @@ class Greed::GameSpec < Neo::Koan
     assert_equal true, subject.respond_to?(:players)
   end
 
+  def test_game_can_be_played
+    subject = Greed::Game.new(Player.new("Bob"))
+    assert_equal true, subject.respond_to?(:play)
+  end
+
 end
