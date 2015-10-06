@@ -93,6 +93,12 @@ module Greed
       }
     end
 
+    def zero_point_roll?(roll, score = 0)
+      return true if roll.any? && score == 0
+
+      false
+    end
+
     def show_totals
       report = ""
 
