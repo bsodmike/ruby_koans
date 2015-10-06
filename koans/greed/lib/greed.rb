@@ -45,12 +45,23 @@ module Greed
     # @param *names [Array<Object>] any number of names of players
     def self.start_game(*names)
       players = create_players(names)
-      new(*players)
+      new(*players).run
+    end
+
+    def run
+      while true do
+        action = take_player_input
+
+        result = take_action(action)
+        break if result == :quit
+
+      end
+
+      puts "Thanks for playing!"
     end
 
     def play
       players.each_with_index do |player, index|
-        puts "Turn for player #{player}"
 
         turn_score = [1]
         dice = DICE_COUNT
@@ -58,8 +69,9 @@ module Greed
         while turn_score.last > 0 do
           turn_score.pop if turn_score.size == 1 && turn_score[0] == 1
 
-          # FIXME: Ask player to approve roll (auto-picking maximum available
+          # NOTE: Ask player to approve roll (auto-picking maximum available
           # dice).
+          puts "\nPlayer #{player.name}, rolling #{dice} dice..."
 
           result = take_turn(@round, dice, player, index)
           if result
@@ -67,16 +79,20 @@ module Greed
             turn_score << result[:score]
             dice = result[:remaining_dice]
 
-            puts turn_score.inspect
-
             process_score(@round, turn_score, player, result[:score]) unless zero_point_roll?(result[:roll], result[:score])
             if zero_point_roll?(result[:roll], result[:score])
               turn_total = turn_score.reduce(:+)
               player.decrement_score(turn_total)
             end
 
-            # FIXME: Ask player if they wish to proceed with another roll (given
+            # NOTE: Ask player if they wish to proceed with another roll (given
             # they have remaining dice); if not, break.
+            if dice > 0
+              print "You have #{dice} dice remaining, do you wish to roll (y/n)? "
+              response = gets.chomp.downcase.to_sym
+
+              break if response == :n
+            end
           else
             break
           end
@@ -84,14 +100,50 @@ module Greed
       end
 
       @round += 1
-      puts turn_totals
+      print_totals
     end
 
-    def turn_totals
-      show_totals
+    def print_totals
+      report = ""
+
+      report << "\nPlayer\tTotal\n"
+      report << "------\t-----\n"
+
+      players.each { |player| report << "#{player.name}\t#{player.score}\n" }
+      report << "\n"
+
+      puts report
     end
 
     protected
+    def print_commands
+      commands = %(
+# List of commands:
+# -----------------
+# play:   play another round
+# quit:   exit game
+)
+      puts commands
+    end
+
+    def take_player_input
+      print_commands
+
+      print "Enter command: "
+      gets.chomp.to_sym
+    end
+
+    def take_action(action)
+      case action
+      when :quit
+        :quit
+      when :play
+        play
+      else
+        puts "\nYou seem confused, please check the commands list below"
+      end
+    end
+
     def take_turn(round, dice, player, index)
       set = DiceSet.new
       set.roll(dice)
