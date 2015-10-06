@@ -15,6 +15,11 @@ module Greed
 
     attr_reader :players
 
+    def self.start_game(*names)
+      players = create_players(names)
+      new(*players)
+    end
+
     def play
       players.each_with_index do |player, index|
         puts "Turn for player #{player}"
@@ -84,6 +89,14 @@ module Greed
 
     def get_player_name(index)
       @players[index].name
+    end
+
+    private
+    def self.create_players(names)
+      players = []
+      names.each { |name| players << ::Greed::Player.new(name) }
+
+      players
     end
 
   end
