@@ -9,7 +9,6 @@ require File.expand_path(File.dirname(__FILE__) + '/greed/scorable')
 #   removed and the player has the option of rolling again using only the
 #   non-scoring dice.
 #
-#
 module Greed
 
   class Game
