@@ -23,7 +23,7 @@ module Greed
     def initialize(*players)
       @players = players
       @turns = []
-      @turn = 0
+      @round = 0
     end
 
     attr_reader :players
@@ -45,7 +45,7 @@ module Greed
           # FIXME: Ask player to approve roll (auto-picking maximum available
           # dice).
 
-          result = take_turn(@turn, dice, player, index)
+          result = take_turn(@round, dice, player, index)
           if result
             @turns << [index, result]
             turn_score = result[:score]
@@ -59,7 +59,7 @@ module Greed
         end
       end
 
-      @turn += 1
+      @round += 1
     end
 
     def turn_totals
@@ -67,7 +67,7 @@ module Greed
     end
 
     protected
-    def take_turn(count, dice, player, index)
+    def take_turn(round, dice, player, index)
       set = DiceSet.new
       set.roll(dice)
 
@@ -76,7 +76,7 @@ module Greed
 
       if player_scoring.score > 0
         return {
-          turn: count,
+          round: round,
           score: player_scoring.score,
           roll: set.values,
           non_scoring_dice: player_scoring.non_scoring,
@@ -90,11 +90,11 @@ module Greed
     def show_totals
       report = ""
 
-      report << "\nTurn\tPlayer\tScore\n"
+      report << "\nRound\tPlayer\tScore\n"
       report << "----\t------\t-----\n"
 
       @turns.each do |turn|
-        report << "#{turn[1][:turn]}\t#{get_player_name(turn[0])}\t#{turn[1][:score]}\n"
+        report << "#{turn[1][:round]}\t#{get_player_name(turn[0])}\t#{turn[1][:score]}\n"
       end
       report << "\n"
 
