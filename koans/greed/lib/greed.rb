@@ -113,7 +113,7 @@ module Greed
             # they have remaining dice); if not, break.
             if dice > 0 && !zero_point_roll?(result[:roll], result[:score])
               print "You have #{dice} dice remaining, do you wish to roll (y/n)? "
-              response = gets.chomp.downcase.to_sym
+              response = STDIN.gets.chomp.downcase.to_sym
 
               break if response == :n
             end
@@ -154,7 +154,7 @@ module Greed
       print_commands
 
       print "Enter command: "
-      gets.chomp.to_sym
+      STDIN.gets.chomp.to_sym
     end
 
     def take_action(action)
