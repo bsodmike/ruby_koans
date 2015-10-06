@@ -79,7 +79,7 @@ module Greed
           turn: count,
           score: player_scoring.score,
           roll: set.values,
-          non_scoring_dice: player_scoring.non_scoring.size,
+          non_scoring_dice: player_scoring.non_scoring,
           remaining_dice: remaining_dice
         }
       end
