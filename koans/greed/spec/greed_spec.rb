@@ -18,11 +18,5 @@ class GreedSpec < Neo::Koan
     assert_equal true, Greed::Player.is_a?(Class)
   end
 
-  Player = Greed::Player
-
-  def test_running_game
-    Greed::Game.start_game("Mike", "John")
-  end
-
 end
 
