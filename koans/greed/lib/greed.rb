@@ -69,8 +69,6 @@ module Greed
         while turn_score.last > 0 do
           turn_score.pop if turn_score.size == 1 && turn_score[0] == 1
 
-          # NOTE: Ask player to approve roll (auto-picking maximum available
-          # dice).
           puts "\nPlayer #{player.name}, rolling #{dice} dice..."
 
           result = take_turn(@round, dice, player, index)
@@ -177,6 +175,9 @@ module Greed
       false
     end
 
+    # Used for debugging purposes only.
+    #
+    # @api private
     def show_totals
       report = ""
 
