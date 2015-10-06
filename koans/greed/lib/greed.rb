@@ -19,6 +19,7 @@ module Greed
   class Game
 
     DICE_COUNT = 5
+    FINAL_ROUND_LIMIT = 3000
 
     # Scoring is managed via the Game instance, by storing turn-by-turn details
     # within the `@turns` instance variable, with the following structure
@@ -37,6 +38,7 @@ module Greed
       @players = players
       @turns = []
       @round = 0
+      @final_round = false
     end
 
     attr_reader :players
@@ -49,14 +51,20 @@ module Greed
 
     def run
       while true do
+        if @final_round
+          puts "Now entering the final round..."
+
+          play
+          break
+        end
+
         action = take_player_input
 
         result = take_action(action)
         break if result == :quit
-
       end
 
-      puts "Thanks for playing!"
+      puts "Thanks for playing!\n"
     end
 
     def play
@@ -83,6 +91,8 @@ module Greed
               turn_total = turn_score.reduce(:+)
               player.decrement_score(turn_total)
             end
+
+            @final_round = true if player.score >= FINAL_ROUND_LIMIT && !@final_round
 
             # NOTE: Ask player if they wish to proceed with another roll (given
             # they have remaining dice); if not, break.
