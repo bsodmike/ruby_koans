@@ -19,16 +19,6 @@ class GreedSpec < Neo::Koan
 
   Player = Greed::Player
 
-  # FIXME: Remove spec, testing non-public API
-  def test_running_a_game_and_printing_turn_totals
-    game = Greed::Game.new(Player.new("mike"), Player.new("bob"))
-
-    game.play
-    game.play
-
-    assert_match /Score/, game.send(:show_totals)
-  end
-
   #def test_running_game
     #Greed::Game.start_game("Mike", "John")
   #end
