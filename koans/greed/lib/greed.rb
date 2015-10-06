@@ -7,6 +7,19 @@ module Greed
 
     DICE_COUNT = 5
 
+    # Scoring is managed via the Game instance, by storing turn-by-turn details
+    # within the `@turns` instance variable, with the following structure
+    #
+    #   [
+    #     [index, details_hsh]
+    #   ]
+    #
+    # As the game is initialised with an explicit list of players (and held
+    # within an array), conveniently their index within this array (accessible
+    # via `#players`) is held as the first array element; the second and final
+    # element is a hash containing details of each play a players makes.
+    #
+    # @param *players [Array<Object>] any number of players for a game
     def initialize(*players)
       @players = players
       @turns = []
@@ -15,6 +28,7 @@ module Greed
 
     attr_reader :players
 
+    # @param *names [Array<Object>] any number of names of players
     def self.start_game(*names)
       players = create_players(names)
       new(*players)
