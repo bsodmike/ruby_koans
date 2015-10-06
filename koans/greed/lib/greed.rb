@@ -1,6 +1,15 @@
 require File.expand_path(File.dirname(__FILE__) + '/greed/dice_set')
 require File.expand_path(File.dirname(__FILE__) + '/greed/scorable')
 
+# Playing Greed
+#
+# * Each player takes a turn consisting of one or more rolls of the dice.
+#
+# * After a player rolls and the score is calculated, the scoring dice are
+#   removed and the player has the option of rolling again using only the
+#   non-scoring dice.
+#
+#
 module Greed
 
   class Game
@@ -72,29 +81,26 @@ module Greed
       set.roll(dice)
 
       player_scoring = Scorable.new(set.values)
-      remaining_dice = dice - player_scoring.non_scoring.size
+      remaining_dice = dice - player_scoring.scoring.size
 
-      if player_scoring.score > 0
-        return {
-          round: round,
-          score: player_scoring.score,
-          roll: set.values,
-          non_scoring_dice: player_scoring.non_scoring,
-          remaining_dice: remaining_dice
-        }
-      end
-
-      false
+      {
+        round: round,
+        score: player_scoring.score,
+        roll: set.values,
+        scoring_dice: player_scoring.scoring,
+        non_scoring_dice: player_scoring.non_scoring,
+        remaining_dice: remaining_dice
+      }
     end
 
     def show_totals
       report = ""
 
-      report << "\nRound\tPlayer\tScore\n"
-      report << "----\t------\t-----\n"
+      report << "\nRound\tPlayer\tScore\tRoll\n"
+      report << "----\t------\t-----\t----\n"
 
       @turns.each do |turn|
-        report << "#{turn[1][:round]}\t#{get_player_name(turn[0])}\t#{turn[1][:score]}\n"
+        report << "#{turn[1][:round]}\t#{get_player_name(turn[0])}\t#{turn[1][:score]}\t#{turn[1][:roll]}\n"
       end
       report << "\n"
 

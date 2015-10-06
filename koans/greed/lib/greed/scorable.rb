@@ -5,12 +5,14 @@ module Greed
     def initialize(dice)
       @dice = dice
       @non_scoring = []
+      @scoring = []
     end
 
     attr_reader :dice
 
     def score
       @non_scoring = []
+      @scoring = []
       tally = 0
 
       counts = Hash.new(0)
@@ -20,12 +22,15 @@ module Greed
         if counts[i] >= 3
           i == 1 ? tally += 1000 : tally += 100 * i
           counts[i] = [counts[i] - 3, 0].max
+          @scoring << i
         end
 
         if i == 1
           tally += 100 * counts[i]
+          @scoring << i if counts[i] > 0
         elsif i == 5
           tally += 50 * counts[i]
+          @scoring << i if counts[i] > 0
         end
       end
 
@@ -39,6 +44,10 @@ module Greed
       @non_scoring.flatten
     end
 
+    def scoring
+      score if @scoring.empty?
+      @scoring.flatten.uniq
+    end
   end
 
 end

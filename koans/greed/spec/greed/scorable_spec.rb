@@ -75,4 +75,11 @@ class Greed::ScorableSpec < Neo::Koan
     assert_equal [1, 5], Greed::Scorable.new([1,5,5,1]).non_scoring
   end
 
+  def test_scoring_of_mixed
+    assert_equal [2, 5], Greed::Scorable.new([2,5,2,2,3]).scoring
+    assert_equal [1, 5], Greed::Scorable.new([1,1,1,5,1]).scoring
+    assert_equal [], Greed::Scorable.new([2,3,4,6]).scoring
+    assert_equal [1, 5], Greed::Scorable.new([1,5,5,1]).scoring
+  end
+
 end

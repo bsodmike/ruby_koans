@@ -33,6 +33,7 @@ class GreedSpec < Neo::Koan
   def test_running_a_game_and_printing_turn_totals
     game = Greed::Game.new(Player.new("mike"), Player.new("bob"))
     game.play
+    game.play
 
     assert_match /Score/, game.turn_totals
   end
