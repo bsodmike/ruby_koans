@@ -2,6 +2,8 @@ Dir.glob(File.dirname(__FILE__) + "/greed/*", &method(:require))
 
 # Playing Greed
 #
+# Greed is a dice game played among 2 or more players, using 5 six-sided dice.
+#
 # * Each player takes a turn consisting of one or more rolls of the dice.
 #
 # * After a player rolls and the score is calculated, the scoring dice are
@@ -14,6 +16,19 @@ Dir.glob(File.dirname(__FILE__) + "/greed/*", &method(:require))
 # * If a roll has zero points, then the player loses not only their turn, but
 #   also accumulated score for that turn.
 #
+# * If a player decides to stop rolling before rolling a zero-point roll, then
+#   the accumulated points for the turn is added to his total score.
+#
+# * Before a player is allowed to accumulate points, they must get at least 300
+#   points in a single turn. Once they have achieved 300 points in a single
+#   turn, the points earned in that turn and each following turn will be
+#   counted toward their total score.
+#
+# * Once a player reaches 3000 (or more) points, the game enters the final
+#   round where each of the other players gets one more turn. The winner is the
+#   player with the highest score after the final round.
+#
+# Futher rules are detailed in `GREED_RULES.txt`.
 module Greed
 
   class Game
