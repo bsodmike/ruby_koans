@@ -77,6 +77,8 @@ module Greed
             turn_score << result[:score]
             dice = result[:remaining_dice]
 
+            puts "Rolled #{result[:roll]} scoring #{result[:score]}!"
+
             process_score(@round, turn_score, player, result[:score]) unless zero_point_roll?(result[:roll], result[:score])
             if zero_point_roll?(result[:roll], result[:score])
               turn_total = turn_score.reduce(:+)
@@ -85,7 +87,7 @@ module Greed
 
             # NOTE: Ask player if they wish to proceed with another roll (given
             # they have remaining dice); if not, break.
-            if dice > 0
+            if dice > 0 && !zero_point_roll?(result[:roll], result[:score])
               print "You have #{dice} dice remaining, do you wish to roll (y/n)? "
               response = gets.chomp.downcase.to_sym
 

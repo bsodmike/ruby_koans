@@ -19,9 +19,9 @@ class GreedSpec < Neo::Koan
 
   Player = Greed::Player
 
-  #def test_running_game
-    #Greed::Game.start_game("Mike", "John")
-  #end
+  def test_running_game
+    Greed::Game.start_game("Mike", "John")
+  end
 
 end
 
