@@ -9,6 +9,12 @@ require File.expand_path(File.dirname(__FILE__) + '/greed/scorable')
 #   removed and the player has the option of rolling again using only the
 #   non-scoring dice.
 #
+# * If all of the thrown dice are scoring, then the player may roll all 5 dice
+#   in the next roll.
+#
+# * If a roll has zero points, then the player loses not only their turn, but
+#   also accumulated score for that turn.
+#
 module Greed
 
   class Game
@@ -46,18 +52,28 @@ module Greed
       players.each_with_index do |player, index|
         puts "Turn for player #{player}"
 
-        turn_score = 1
+        turn_score = [1]
         dice = DICE_COUNT
 
-        while turn_score > 0 do
+        while turn_score.last > 0 do
+          turn_score.pop if turn_score.size == 1 && turn_score[0] == 1
+
           # FIXME: Ask player to approve roll (auto-picking maximum available
           # dice).
 
           result = take_turn(@round, dice, player, index)
           if result
             @turns << [index, result]
-            turn_score = result[:score]
+            turn_score << result[:score]
             dice = result[:remaining_dice]
+
+            puts turn_score.inspect
+
+            process_score(@round, turn_score, player, result[:score]) unless zero_point_roll?(result[:roll], result[:score])
+            if zero_point_roll?(result[:roll], result[:score])
+              turn_total = turn_score.reduce(:+)
+              player.decrement_score(turn_total)
+            end
 
             # FIXME: Ask player if they wish to proceed with another roll (given
             # they have remaining dice); if not, break.
@@ -93,6 +109,16 @@ module Greed
       }
     end
 
+    def process_score(round, turn_scores, player, score)
+      turn_total = turn_scores.reduce(:+)
+
+      if player.score == 0 && turn_total >= 300
+        player.increment_score(turn_total)
+      elsif player.score >= 300
+        player.increment_score(score)
+      end
+    end
+
     def zero_point_roll?(roll, score = 0)
       return true if roll.any? && score == 0
 
@@ -102,11 +128,11 @@ module Greed
     def show_totals
       report = ""
 
-      report << "\nRound\tPlayer\tScore\tRoll\n"
-      report << "----\t------\t-----\t----\n"
+      report << "\nRound\tPlayer\tScore\tTotal\tRoll\n"
+      report << "----\t------\t-----\t-----\t----\n"
 
       @turns.each do |turn|
-        report << "#{turn[1][:round]}\t#{get_player(turn[0]).name}\t#{turn[1][:score]}\t#{turn[1][:roll]}\n"
+        report << "#{turn[1][:round]}\t#{get_player(turn[0]).name}\t#{turn[1][:score]}\t#{get_player(turn[0]).score}\t#{turn[1][:roll]}\n"
       end
       report << "\n"
 
@@ -130,9 +156,19 @@ module Greed
   class Player
     def initialize(name)
       @name = name
+      @score = 0
     end
 
-    attr_reader :name
+    attr_reader :name, :score
+
+    def increment_score(score)
+      @score += score
+    end
+
+    def decrement_score(score)
+      decremented_score = @score - score
+      @score = [decremented_score, 0].max # prevent a non-negative score.
+    end
   end
 end
 
