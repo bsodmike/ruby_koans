@@ -32,6 +32,7 @@ Dir.glob(File.dirname(__FILE__) + "/greed/*", &method(:require))
 module Greed
 
   class Game
+    include Runnable
 
     DICE_COUNT = 5
     FINAL_ROUND_LIMIT = 3000
@@ -62,24 +63,6 @@ module Greed
     def self.start_game(*names)
       players = create_players(names)
       new(*players).run
-    end
-
-    def run
-      while true do
-        if @final_round
-          puts "Now entering the final round..."
-
-          play
-          break
-        end
-
-        action = take_player_input
-
-        result = take_action(action)
-        break if result == :quit
-      end
-
-      puts "Thanks for playing!\n"
     end
 
     def play
@@ -136,34 +119,6 @@ module Greed
     end
 
     protected
-    def print_commands
-      commands = %(
-# List of commands:
-# -----------------
-# play:   play another round
-# quit:   exit game
-)
-      puts commands
-    end
-
-    def take_player_input
-      print_commands
-
-      print "Enter command: "
-      STDIN.gets.chomp.to_sym
-    end
-
-    def take_action(action)
-      case action
-      when :quit
-        :quit
-      when :play
-        play
-      else
-        puts "\nYou seem confused, please check the commands list below"
-      end
-    end
-
     def take_turn(round, dice, player, index)
       set = DiceSet.new
       set.roll(dice)
