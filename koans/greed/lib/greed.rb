@@ -94,31 +94,27 @@ module Greed
           puts "\nPlayer #{player.name}, rolling #{dice} dice..."
 
           result = take_turn(@round, dice, player, index)
-          if result
-            @turns << [index, result]
-            turn_score << result[:score]
-            dice = result[:remaining_dice]
+          @turns << [index, result]
+          turn_score << result[:score]
+          dice = result[:remaining_dice]
 
-            puts "Rolled #{result[:roll]} scoring #{result[:score]}!"
+          puts "Rolled #{result[:roll]} scoring #{result[:score]}!"
 
-            process_score(@round, turn_score, player, result[:score]) unless zero_point_roll?(result[:roll], result[:score])
-            if zero_point_roll?(result[:roll], result[:score])
-              turn_total = turn_score.reduce(:+)
-              player.decrement_score(turn_total)
-            end
+          process_score(@round, turn_score, player, result[:score]) unless zero_point_roll?(result[:roll], result[:score])
+          if zero_point_roll?(result[:roll], result[:score])
+            turn_total = turn_score.reduce(:+)
+            player.decrement_score(turn_total)
+          end
 
-            @final_round = true if player.score >= FINAL_ROUND_LIMIT && !@final_round
+          @final_round = true if player.score >= FINAL_ROUND_LIMIT && !@final_round
 
-            # NOTE: Ask player if they wish to proceed with another roll (given
-            # they have remaining dice); if not, break.
-            if dice > 0 && !zero_point_roll?(result[:roll], result[:score])
-              print "You have #{dice} dice remaining, do you wish to roll (y/n)? "
-              response = STDIN.gets.chomp.downcase.to_sym
+          # NOTE: Ask player if they wish to proceed with another roll (given
+          # they have remaining dice); if not, break.
+          if dice > 0 && !zero_point_roll?(result[:roll], result[:score])
+            print "You have #{dice} dice remaining, do you wish to roll (y/n)? "
+            response = STDIN.gets.chomp.downcase.to_sym
 
-              break if response == :n
-            end
-          else
-            break
+            break if response == :n
           end
         end
       end
