@@ -112,7 +112,8 @@ module Greed
       report << "\nPlayer\tTotal\n"
       report << "------\t-----\n"
 
-      players.each { |player| report << "#{player.name}\t#{player.score}\n" }
+      ranked_players = players.sort { |x,y| y.score <=> x.score }
+      ranked_players.each { |player| report << "#{player.name}\t#{player.score}\n" }
       report << "\n"
 
       puts report
