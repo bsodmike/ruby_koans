@@ -32,6 +32,7 @@ Dir.glob(File.dirname(__FILE__) + "/greed/*", &method(:require))
 module Greed
 
   class Game
+    include Debuggable
     include Runnable
 
     DICE_COUNT = 5
@@ -153,22 +154,7 @@ module Greed
       false
     end
 
-    # Used for debugging purposes only.
-    #
-    # @api private
-    def show_totals
-      report = ""
 
-      report << "\nRound\tPlayer\tScore\tTotal\tRoll\n"
-      report << "----\t------\t-----\t-----\t----\n"
-
-      @turns.each do |turn|
-        report << "#{turn[1][:round]}\t#{get_player(turn[0]).name}\t#{turn[1][:score]}\t#{get_player(turn[0]).score}\t#{turn[1][:roll]}\n"
-      end
-      report << "\n"
-
-      report
-    end
 
     def get_player(index)
       @players[index]
